@@ -1,3 +1,4 @@
 {
-    "cSpell.language": "pt-BR"
+    "cSpell.language": "pt-BR",
+    "python.formatting.provider": "yapf"
 }

@@ -17,28 +17,28 @@ from sklearn.gaussian_process import GaussianProcessClassifier
 from sklearn.gaussian_process.kernels import RBF
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 
-# ### read in data
-# multiple_patients = True
-# ID = False
-# input_file = "data/five_subjects.csv"
-# output_file = "output/five_subjects_results.csv"
+### read in data
+multiple_patients = True
+ID = False
+input_file = "data/five_subjects.csv"
+output_file = "output/five_subjects_results.csv"
 
-# # prepare data
-# data = pd.read_csv(input_file)
-# X = data.loc[:, data.columns != "seizure"]
-# X = X.loc[:, X.columns != "start_time"]
-# X = X.loc[:, X.columns != "file ID"]
-# Y = np.asarray(data['seizure'])
-# feature_names = X.columns.tolist()
-# print('The number of samples for the non-seizure class is:', Y.shape[0])
-# print('The number of samples for the seizure class is:', np.sum(Y))
+# prepare data
+data = pd.read_csv(input_file)
+X = data.loc[:, data.columns != "seizure"]
+X = X.loc[:, X.columns != "start_time"]
+X = X.loc[:, X.columns != "file ID"]
+Y = np.asarray(data['seizure'])
+feature_names = X.columns.tolist()
+print('The number of samples for the non-seizure class is:', Y.shape[0])
+print('The number of samples for the seizure class is:', np.sum(Y))
 
-# # if multiple patients, one-hot encode patient ID
-# if multiple_patients:
-#     X = X.loc[:, X.columns != "subject"] 
-#     if ID:
-#         patient = pd.get_dummies(data['subject'], prefix='subject')
-#         X = pd.concat([X, patient], axis = 1)
+# if multiple patients, one-hot encode patient ID
+if multiple_patients:
+    X = X.loc[:, X.columns != "subject"] 
+    if ID:
+        patient = pd.get_dummies(data['subject'], prefix='subject')
+        X = pd.concat([X, patient], axis = 1)
 
 # ### preprocessing
 
@@ -48,7 +48,7 @@ def filter_features(X):
     print("Variables Kept after removing features with 0 variance: ", thresholder.fit_transform(X).shape[1])
 
     # highly correlated features
-    corr = abs(X.corr())
+    corr = abs(x.corr())
     upper = corr.where(np.triu(np.ones(corr.shape), k=1).astype(np.bool))
     cols = [column for column in upper.columns if any(upper[column] < 0.9)]
     print("Variables Kept after removing features with corr > 0.9: ", len(cols)) 
@@ -71,9 +71,9 @@ SVM = SVC(kernel="rbf", class_weight={1: 100}, random_state = 0)
 # cross validation
 kf = KFold(n_splits=5)
 accuracy, TPR, FPR = [], [], []
-for train, test in kf.split(X_train):
-    SVM.fit(X_train[train, :], y_train[train])
-    pred = SVM.predict(X_train[test])
+for train, test in kf.split(x_train):
+    SVM.fit(x_train[train, :], y_train[train])
+    pred = SVM.predict(x_train[test])
     tn, fp, fn, tp = confusion_matrix(y_train[test], pred).ravel()
     accuracy.append((tp + tn)/(tn + fp + fn + tp))
     TPR.append(tp / (tp + fn))

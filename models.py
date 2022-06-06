@@ -42,18 +42,20 @@ from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 
 # ### preprocessing
 
-# # check zero variance features
-# thresholder = VarianceThreshold(threshold=0)
-# print("Variables Kept after removing features with 0 variance: ", thresholder.fit_transform(X).shape[1])
+def filter_features(X):
+    # check zero variance features
+    thresholder = VarianceThreshold(threshold=0)
+    print("Variables Kept after removing features with 0 variance: ", thresholder.fit_transform(X).shape[1])
 
-# # highly correlated features
-# corr = abs(X.corr())
-# upper = corr.where(np.triu(np.ones(corr.shape), k=1).astype(np.bool))
-# cols = [column for column in upper.columns if any(upper[column] < 0.9)]
-# print("Variables Kept after removing features with corr > 0.9: ", len(cols)) 
+    # highly correlated features
+    corr = abs(X.corr())
+    upper = corr.where(np.triu(np.ones(corr.shape), k=1).astype(np.bool))
+    cols = [column for column in upper.columns if any(upper[column] < 0.9)]
+    print("Variables Kept after removing features with corr > 0.9: ", len(cols)) 
 
-# # normalize features
-# X = preprocessing.normalize(X)
+    # normalize features
+    X = preprocessing.normalize(X)
+    
 
 # # split into testing and training 
 # X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size = 0.2, random_state=0)

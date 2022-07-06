@@ -1,6 +1,7 @@
 #usr/bin/python3
 import numpy as np
 import mne
+from sympy import false
 
 def calculate_neg_pos(y):
     unique, counts = np.unique(y, return_counts=True)
@@ -10,7 +11,8 @@ def calculate_neg_pos(y):
     return neg, pos
 
 def read_edf_to_raw(file_path):
-    raw = mne.io.read_raw_edf(file_path, preload=True, verbose='WARNING')
-    raw.set_eeg_reference()
-    raw.filter(l_freq=0.5, h_freq=45)
+    mne.set_log_level(verbose='ERROR')
+    raw = mne.io.read_raw_edf(file_path, preload=True, verbose=False)
+    raw.set_eeg_reference(verbose=False)
+    raw.filter(l_freq=0.5, h_freq=45, verbose=False)
     return raw
